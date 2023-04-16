@@ -35,7 +35,7 @@ class Vegetable(pygame.sprite.Sprite):
     def suicide(self):
         self.kill()
 
-    def update(self, dt=0.4, window=None):
+    def update(self, dt = 0.4, window = None):
         if not self.rect.colliderect(window.get_rect()):
             self.suicide()
         print(self.orientation)

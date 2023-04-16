@@ -2,7 +2,7 @@ import time
 
 
 class Timer:
-    def __init__(self, game_time=0):
+    def __init__(self, game_time = 0):
         self.game_time = game_time
 
     def runTimer(self):

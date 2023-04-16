@@ -15,6 +15,7 @@ class Game:
         self.vegetable_group.add(self.vegetable)
         self.timer = Timer(0)
         self.timer_thread = threading.Thread(target=self.timer.runTimer)
+        self.timer_thread.daemon = True
 
     def start(self):
         self.window.resize((640, 480))
@@ -36,7 +37,7 @@ class Game:
     def event_handler(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.timer_thread.join()
+                # self.timer_thread.setDaemon()
                 pygame.quit()
 
                 return True

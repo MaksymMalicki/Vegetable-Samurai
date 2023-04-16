@@ -3,7 +3,7 @@ import pygame
 
 class Window:
 
-    def __init__(self, width=640, height=480):
+    def __init__(self, width = 640, height = 480):
         self.width = width
         self.height = height
         pygame.display.set_caption("Vegetable Samurai")
