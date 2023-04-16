@@ -22,12 +22,12 @@ class Vegetable(pygame.sprite.Sprite):
         self.get_initial_v_and_theta()
 
     def get_initial_v_and_theta(self):
-        self.pos_x = random.randint(0, self.width)
+        self.pos_x = random.randint(1, self.width)
         self.pos_y = self.height
         # obliczamy kierunek wystrzału, losujemy kąt wystrzału, obliczamy prędkość początkową tak by warzywo
         # nie wystrzeliło poza ekran
         self.orientation = random.choice([1, -1])
-        range = random.randint(self.pos_x, self.width) if self.orientation == 1 else random.randint(0, self.pos_x)
+        range = random.randint(self.pos_x, self.width) if self.orientation == 1 else random.randint(1, self.pos_x)
         self.theta = math.radians(random.randint(45, 60))
         self.initial_velocity = math.sqrt((range * gravity) / math.sin(2 * self.theta))
         self.time = 0
