@@ -1,6 +1,5 @@
 import time
 
-
 class Timer:
     def __init__(self, game_time = 0):
         self.game_time = game_time
@@ -9,3 +8,7 @@ class Timer:
         while True:
             self.game_time += 1
             time.sleep(1)
+
+    def kill(self):
+        raise SystemExit
+        

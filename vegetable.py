@@ -38,12 +38,12 @@ class Vegetable(pygame.sprite.Sprite):
     def update(self, dt = 0.4, window = None):
         if not self.rect.colliderect(window.get_rect()):
             self.suicide()
-        print(self.orientation)
+        #print(self.orientation)
         self.pos_x += dt * self.orientation
         # pozycja y musi być w funkcji czasu, ponieważ położenie x losujemy z zakresu 0 - width. Jeśli wylosujemy np.
         # 232, to położenie y mamy w chwili y(232) a nie y(0), dlatego to trzeba trackować osobno
         self.time += dt * self.orientation
         self.pos_y = self.height - (self.time * math.tan(self.theta) - (
                 (gravity * self.time ** 2) / (2 * self.initial_velocity ** 2 * math.cos(self.theta) ** 2)))
-        print(self.pos_x, self.pos_y)
+        #print(self.pos_x, self.pos_y)
         self.rect.center = [self.pos_x, self.pos_y]
