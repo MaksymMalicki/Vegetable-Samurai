@@ -5,12 +5,16 @@ import math
 
 gravity = 9.81
 
+textures = [
+    "images/carrot.png",
+
+]
 
 class Vegetable(pygame.sprite.Sprite):
 
     def __init__(self, window_size):
         super(Vegetable, self).__init__()
-        self.image = pygame.image.load("images/carrot.png")
+        self.image = pygame.image.load(random.choice(textures))
         self.rect = self.image.get_rect()
         self.theta = 0
         self.orientation = 1
@@ -33,20 +37,17 @@ class Vegetable(pygame.sprite.Sprite):
         range = random.randint(self.pos_x, self.width) if self.orientation == 1 else random.randint(1, self.pos_x)
         self.theta = math.radians(random.randint(60, 80))
         self.initial_velocity = math.sqrt((range * gravity) / math.sin(2 * self.theta))
-        self.time = 0
+        self.x_relative_y = 0
 
-    def suicide(self):
-        self.kill()
-
-    def update(self, dt = 0.4, window = None):
+    def update(self, movement_shift = 0.4, window = None):
         if not self.rect.colliderect(window.get_rect()):
-            self.suicide()
+            self.kill()
         #print(self.orientation)
-        self.pos_x += dt * self.orientation
+        self.pos_x += movement_shift * self.orientation
         # pozycja y musi być w funkcji czasu, ponieważ położenie x losujemy z zakresu 0 - width. Jeśli wylosujemy np.
         # 232, to położenie y mamy w chwili y(232) a nie y(0), dlatego to trzeba trackować osobno
-        self.time += dt * self.orientation
-        self.pos_y = self.height - (self.time * math.tan(self.theta) - (
-                (gravity * self.time ** 2) / (2 * self.initial_velocity ** 2 * math.cos(self.theta) ** 2)))
+        self.x_relative_y += movement_shift * self.orientation
+        self.pos_y = self.height - (self.x_relative_y * math.tan(self.theta) - (
+                (gravity * self.x_relative_y ** 2) / (2 * self.initial_velocity ** 2 * math.cos(self.theta) ** 2)))
         #print(self.pos_x, self.pos_y)
         self.rect.center = [self.pos_x, self.pos_y]
