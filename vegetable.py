@@ -10,7 +10,7 @@ class Vegetable(pygame.sprite.Sprite):
 
     def __init__(self, window_size):
         super(Vegetable, self).__init__()
-        self.image = pygame.image.load("carrot.png")
+        self.image = pygame.image.load("images/carrot.png")
         self.rect = self.image.get_rect()
         self.theta = 0
         self.orientation = 1
