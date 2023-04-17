@@ -66,5 +66,5 @@ class Game:
                         self.score.add_point()
                         print(f'wynik: {self.score.total_score}')
                         print("pociachano tej")
-                        self.vegetable.suicide()
+                        self.vegetable.kill()
         return False
