@@ -39,8 +39,8 @@ class Game:
             score_text = pygame.font.Font(None, 50).render("score: {}".format(self.score.total_score), True, (255, 255, 255))
             score_rect = timer_text.get_rect(center=(540, 50))
             self.window.screen.blit(score_text, score_rect)
-            self.vegetable_group.draw(self.window.screen)
             self.vegetable_group.update(self.clock.tick(60), self.window.screen)
+            self.vegetable_group.draw(self.window.screen)
             if not self.vegetable_group.has(self.vegetable):
                 print("nowy ziomek!")
                 self.vegetable = Vegetable(self.window.screen.get_size())
