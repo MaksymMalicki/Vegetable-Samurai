@@ -10,5 +10,4 @@ class Timer:
             time.sleep(1)
 
     def kill(self):
-        raise SystemExit
-        
+        raise SystemExit 

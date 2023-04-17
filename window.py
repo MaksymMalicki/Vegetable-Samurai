@@ -1,6 +1,5 @@
 import pygame
 
-
 class Window:
 
     def __init__(self, width = 640, height = 480):
@@ -10,7 +9,7 @@ class Window:
         self.screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
         font_path = pygame.font.match_font('arial')
         self.font = pygame.font.Font(font_path, 48)
-        self.background_image = pygame.image.load("background2.jpg").convert()
+        self.background_image = pygame.image.load("images/background2.jpg").convert()
 
     def draw_background(self):
         pygame.display.flip()
