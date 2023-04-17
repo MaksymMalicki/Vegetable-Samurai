@@ -10,7 +10,6 @@ class Score:
     def run_score(self):
         while True:
             time.sleep(1)
-
         
     def kill(self):
         raise SystemExit
