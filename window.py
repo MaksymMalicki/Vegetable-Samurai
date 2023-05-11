@@ -15,6 +15,8 @@ class Window:
         pygame.display.flip()
         self.screen.blit(self.background_image, (0, 0))
 
+    # TODO resize to different scales
+    
     def resize(self, new_size):
         scale_factor = min(new_size[0] / self.width, new_size[1] / self.height)
         self.screen = pygame.display.set_mode((int(self.width * scale_factor), int(self.height * scale_factor)),
