@@ -1,6 +1,7 @@
 import threading
 import pygame
 import time
+import random
 from window import Window
 from score import Score
 from vegetable import Vegetable
@@ -16,10 +17,9 @@ class Game:
         pygame.mixer.init()
         pygame.mixer.music.load("sounds/Naruto - Fight.mp3")
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.2)
+        pygame.mixer.music.set_volume(0.4)
         self.slash_sound = pygame.mixer.Sound("sounds/slash.wav")
         self.slash_sound.set_volume(0.2)
-        #pygame.mixer.Channel(0).play(pygame.mixer.Sound("Naruto - Fight.mp3"))
         self.vegetable_group = pygame.sprite.Group()
         self.vegetable_group.add(self.vegetable)
         self.timer = Timer(0)
@@ -41,10 +41,12 @@ class Game:
             score_text = pygame.font.Font(None, 50).render("score: {}".format(self.score.total_score), True, (255, 255, 255))
             score_rect = timer_text.get_rect(center=(540, 50))
             self.window.screen.blit(score_text, score_rect)
+
+            # TODO move to thread
+
+            self.vegetable_group.update(random.randint(1, 50) / 10, self.window.screen)
             self.vegetable_group.draw(self.window.screen)
-            self.vegetable_group.update(self.clock.tick(60), self.window.screen)
             if not self.vegetable_group.has(self.vegetable):
-                print("nowy ziomek!")
                 self.vegetable = Vegetable(self.window.screen.get_size())
                 self.vegetable_group.add(self.vegetable)
             self.clock.tick(60)
@@ -66,7 +68,5 @@ class Game:
                     if self.vegetable.rect.collidepoint(pygame.mouse.get_pos()):
                         self.slash_sound.play(0)
                         self.score.add_point()
-                        print(f'wynik: {self.score.total_score}')
-                        print("pociachano tej")
                         self.vegetable.kill()
         return False

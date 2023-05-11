@@ -1,5 +1,7 @@
 import time
 
+# TODO mutex while cutting 2 objects
+
 class Score:
     def __init__(self):
         self.total_score = 0
