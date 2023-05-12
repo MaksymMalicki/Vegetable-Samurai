@@ -5,6 +5,7 @@ import random
 from window import Window
 from score import Score
 from vegetable import Vegetable
+from generator import Generator
 from timer import Timer
 
 class Game:
@@ -28,11 +29,15 @@ class Game:
         self.score = Score()
         self.score_thread = threading.Thread(target=self.score.run_score)
         self.score_thread.daemon = True
+        self.gen = Generator('normal')
+        self.gen_thread = threading.Thread(target=self.gen.run_generator)
+        self.gen_thread.daemon = True
 
     def start(self):
         self.window.resize((640, 480))
         self.timer_thread.start()
         self.score_thread.start()
+        self.gen_thread.start()
         while not self.event_handler():
             self.window.draw_background()
             timer_text = pygame.font.Font(None, 50).render("timer: {}".format(self.timer.game_time), True, (255, 255, 255))
