@@ -28,6 +28,8 @@ class Vegetable(pygame.sprite.Sprite):
     # TODO modify initial params to avoid creating objects with speeds which make it not possible to slice them
     # i.e. too low or to fast initial speed or very low angle of the object launch
 
+    # TODO solve math error
+    
     def get_initial_v_and_theta(self):
         # obliczamy kierunek wystrzału, losujemy kąt wystrzału, obliczamy prędkość początkową tak by warzywo
         # nie wystrzeliło poza ekran
