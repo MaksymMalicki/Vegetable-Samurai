@@ -33,6 +33,11 @@ class Game:
         self.gen_thread = threading.Thread(target=self.gen.run_generator)
         self.gen_thread.daemon = True
 
+    def add_vegetables(self, count):
+        for _ in range(count):
+            vegetable = Vegetable(self.window.screen.get_size())
+            self.vegetable_group.add(vegetable)
+
     def start(self):
         self.window.resize((640, 480))
         self.timer_thread.start()
@@ -51,11 +56,11 @@ class Game:
 
             self.vegetable_group.update(random.randint(1, 50) / 10, self.window.screen)
             self.vegetable_group.draw(self.window.screen)
-            if not self.vegetable_group.has(self.vegetable):
-                self.vegetable = Vegetable(self.window.screen.get_size())
-                self.vegetable_group.add(self.vegetable)
+            if len(self.vegetable_group.sprites()) == 0:
+                self.add_vegetables(random.randint(1,4))
             self.clock.tick(60)
 
+    # TODO remove print statement
     def event_handler(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -63,6 +68,7 @@ class Game:
                     print(thread.name)
                 self.timer.kill()
                 self.score.kill()
+                self.gen.kill()
                 pygame.quit()
 
                 return True
@@ -70,8 +76,10 @@ class Game:
                 self.window.resize(event.size)
             elif event.type == pygame.MOUSEMOTION:
                 if pygame.mouse.get_pressed()[0]:
-                    if self.vegetable.rect.collidepoint(pygame.mouse.get_pos()):
-                        self.slash_sound.play(0)
-                        self.score.add_point()
-                        self.vegetable.kill()
+                    for veg in self.vegetable_group:
+                        if veg.rect.collidepoint(pygame.mouse.get_pos()):
+                            self.slash_sound.play(0)
+                            self.score.add_point()
+                            self.vegetable_group.remove(veg)
+                            veg.kill()
         return False

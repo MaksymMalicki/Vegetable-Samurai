@@ -10,8 +10,9 @@ class Generator:
     def run_generator(self):
         while True:
             if self.mode == 'normal':
+                cooldown = random.randint(1,10)
                 print(cooldown)
-                time.sleep(random.randint(1,10))
+                time.sleep(cooldown)
             elif self.mode != 'normal':
                 cooldown = random.randint(1,3)
                 print(cooldown)
