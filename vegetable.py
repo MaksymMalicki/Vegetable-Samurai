@@ -7,7 +7,6 @@ gravity = 9.81
 
 textures = [
     "images/carrot.png",
-
 ]
 
 class Vegetable(pygame.sprite.Sprite):

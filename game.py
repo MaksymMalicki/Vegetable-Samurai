@@ -32,6 +32,7 @@ class Game:
         self.gen = Generator(self.window,'normal')
         self.gen_thread = threading.Thread(target=self.gen.run_generator)
         self.gen_thread.daemon = True
+        self.bomb_group = None
 
     def add_vegetables(self, count):
         for _ in range(count):
@@ -81,7 +82,11 @@ class Game:
                     for veg in self.vegetable_group:
                         if veg.rect.collidepoint(pygame.mouse.get_pos()):
                             self.slash_sound.play(0)
-                            self.score.add_point()
+                            threading.Thread(target=self.score.add_point, daemon=True).start()
                             self.vegetable_group.remove(veg)
                             veg.kill()
+                            threading.Thread(target=self.timer.freeze_timer, daemon=True).start()
+                    # for bomb in self.bomb_group:
+                    #     threading.Thread(target=self.score.remove_point, daemon=True)
+                    #     pass
         return False
