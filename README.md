@@ -4,10 +4,10 @@
 
 ## FEATURES to add:
 1. add multiple vegetables thrown at one time :heavy_check_mark:
-1. add bombs
+1. add bombs :heavy_check_mark:
 1. add different types of boosts i.e. time boosts, score multipliers
-1. resize to different scales
-1. add thread to generate objects
+1. resize to different scales 
+1. add thread to generate objects :heavy_check_mark:
 
 
 https://user-images.githubusercontent.com/84677877/235009524-c829f39f-6944-45b1-af79-ab5481bc4334.mp4
