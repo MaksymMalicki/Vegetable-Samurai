@@ -19,8 +19,9 @@ class Generator:
                 print(cooldown)
                 time.sleep(cooldown)
                 with self.lock:
-                    vegetable = Vegetable(self.window.screen.get_size())
-                    self.vegetables.append(vegetable)
+                    for _ in range(random.randint(1,3)):
+                        vegetable = Vegetable(self.window.screen.get_size())
+                        self.vegetables.append(vegetable)
             elif self.mode != 'normal':
                 cooldown = random.randint(1,3)
                 print(cooldown)

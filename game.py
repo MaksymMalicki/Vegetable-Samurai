@@ -57,9 +57,9 @@ class Game:
             self.vegetable_group.update(random.randint(1, 50) / 10, self.window.screen)
             self.vegetable_group.draw(self.window.screen)
             
-            if len(self.vegetable_group.sprites()) == 0:
-                self.vegetable_group.add(self.gen.get_vegetables())
-                self.gen.clear_vegetables()
+            
+            self.vegetable_group.add(self.gen.get_vegetables())
+            self.gen.clear_vegetables()
             self.clock.tick(60)
 
     # TODO remove print statement
