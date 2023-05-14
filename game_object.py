@@ -25,13 +25,13 @@ class GameObject(pygame.sprite.Sprite):
 
     def get_initial_v_and_theta(self):
         range = random.randint(self.pos_x, self.width) - self.pos_x if self.orientation == 1 else random.randint(1,self.pos_x)
-        self.theta = math.radians(random.randint(60, 89))
+        self.theta = math.radians(random.randint(60, 80))
         self.ini_vel = math.sqrt((range * gravity) / math.sin(2 * self.theta))
-        self.ini_vel = random.randint(50,55) if math.floor(self.ini_vel) < 50 else self.ini_vel
-        self.ini_vel = random.randint(55,60) if math.floor(self.ini_vel) > 60 else self.ini_vel
+        self.ini_vel = random.randint(40,55) if math.floor(self.ini_vel) < 40 else self.ini_vel
+        self.ini_vel = random.randint(55,70) if math.floor(self.ini_vel) > 70 else self.ini_vel
         print(self.ini_vel)
         
-    def update(self, movement_shift=0.2, window=None):
+    def update(self, movement_shift=0.4, window=None):
         if not self.rect.colliderect(window.get_rect()):
             self.kill()
         self.pos_x += movement_shift * self.orientation
