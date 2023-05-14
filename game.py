@@ -18,12 +18,16 @@ class Game:
         pygame.mixer.init()
         pygame.mixer.music.load("sounds/Naruto - Fight.mp3")
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.2)
+        pygame.mixer.music.set_volume(0.1)
         self.slash_sound = pygame.mixer.Sound("sounds/slash.wav")
         self.slash_sound.set_volume(0.2)
+        self.power_up = pygame.mixer.Sound('sounds/level_up.mp3')
+        self.power_up.set_volume(0.2)
+        self.explosion_sound = pygame.mixer.Sound('sounds/explosion.mp3')
+        self.explosion_sound.set_volume(0.3)
         self.vegetable_group = pygame.sprite.Group()
         self.bomb_group = pygame.sprite.Group()
-        self.timer = Timer(60)
+        self.timer = Timer(30)
         self.timer_thread = threading.Thread(target=self.timer.runTimer, daemon=True)
         self.score = Score()
         self.score_thread = threading.Thread(target=self.score.run_score, daemon=True)
@@ -63,9 +67,13 @@ class Game:
 
             self.clock.tick(60)
 
-    def event_handler(self):
+            if self.timer.game_time == 0:
+                pygame.quit()
+                return True
+
+    def event_handler(self): 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or self.timer.game_time == 0:
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 return True
             elif event.type == pygame.VIDEORESIZE:
@@ -80,9 +88,11 @@ class Game:
                             veg.kill()
                             if(self.score.total_score != 0 and self.score.total_score % 10 == 0):
                                 self.timer.start_freeze_thread()
+                                self.power_up.play(0)
                     for bomb in self.bomb_group:
                         if bomb.rect.collidepoint(pygame.mouse.get_pos()):
                             self.slash_sound.play(0)
+                            self.explosion_sound.play(0)
                             threading.Thread(target=self.score.divide_points, daemon=True).start()
                             self.bomb_group.remove(bomb)
                             bomb.kill()
