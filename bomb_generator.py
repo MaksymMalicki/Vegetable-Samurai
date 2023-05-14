@@ -15,17 +15,13 @@ class BombGenerator:
     def run_generator(self):
         while True:
             if self.mode == 'normal':
-                cooldown = random.randint(3, 8)
-                time.sleep(cooldown)
+                time.sleep(random.randint(3, 8))
                 with self.lock:
                     for _ in range(random.randint(1, 2)):
                         bomb = Bomb(self.window.screen.get_size())
-                        print("new bomb")
                         self.bombs.append(bomb)
-            elif self.mode != 'normal':
-                cooldown = random.randint(1, 3)
-                print(cooldown)
-                time.sleep(cooldown)
+            elif self.mode == 'hard':
+                time.sleep(random.randint(1, 3))
 
     def get_bombs(self):
         with self.lock:
@@ -34,6 +30,3 @@ class BombGenerator:
     def clear_bombs(self):
         with self.lock:
             self.bombs.clear()
-
-    def kill(self):
-        raise SystemExit

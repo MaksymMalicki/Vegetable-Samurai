@@ -3,7 +3,6 @@ import random
 import threading
 from vegetable import Vegetable
 
-
 class Generator:
     def __init__(self, window, mode='normal'):
         self.mode = mode
@@ -11,20 +10,17 @@ class Generator:
         self.lock = threading.Lock()
         self.vegetables = []
 
-    # TODO remove print statements after done with debug
+    # TODO implement difficulty levels
     def run_generator(self):
         while True:
             if self.mode == 'normal':
-                cooldown = random.randint(1, 3)
-                print(cooldown)
-                time.sleep(cooldown)
+                time.sleep(random.randint(1, 3))
                 with self.lock:
                     for _ in range(random.randint(1, 3)):
                         vegetable = Vegetable(self.window.screen.get_size())
                         self.vegetables.append(vegetable)
-            elif self.mode != 'normal':
+            elif self.mode == 'hard':
                 cooldown = random.randint(1, 3)
-                print(cooldown)
                 time.sleep(cooldown)
 
     def get_vegetables(self):
