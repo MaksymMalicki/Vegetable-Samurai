@@ -1,11 +1,11 @@
 import threading
 import pygame
-import time
 import random
 from window import Window
 from score import Score
 from vegetable import Vegetable
 from generator import Generator
+from bomb_generator import BombGenerator
 from timer import Timer
 
 class Game:
@@ -18,32 +18,26 @@ class Game:
         pygame.mixer.init()
         pygame.mixer.music.load("sounds/Naruto - Fight.mp3")
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.4)
+        pygame.mixer.music.set_volume(0)
         self.slash_sound = pygame.mixer.Sound("sounds/slash.wav")
         self.slash_sound.set_volume(0.2)
         self.vegetable_group = pygame.sprite.Group()
-        self.vegetable_group.add(self.vegetable)
+        self.bomb_group = pygame.sprite.Group()
         self.timer = Timer(0)
-        self.timer_thread = threading.Thread(target=self.timer.runTimer)
-        self.timer_thread.daemon = True
+        self.timer_thread = threading.Thread(target=self.timer.runTimer, daemon=True)
         self.score = Score()
-        self.score_thread = threading.Thread(target=self.score.run_score)
-        self.score_thread.daemon = True
+        self.score_thread = threading.Thread(target=self.score.run_score, daemon=True)
         self.gen = Generator(self.window,'normal')
-        self.gen_thread = threading.Thread(target=self.gen.run_generator)
-        self.gen_thread.daemon = True
-        self.bomb_group = None
-
-    def add_vegetables(self, count):
-        for _ in range(count):
-            vegetable = Vegetable(self.window.screen.get_size())
-            self.vegetable_group.add(vegetable)
+        self.gen_thread = threading.Thread(target=self.gen.run_generator, daemon=True)
+        self.bomb_gen = BombGenerator(self.window, 'normal')
+        self.bomb_gen_thread = threading.Thread(target=self.bomb_gen.run_generator, daemon=True)
 
     def start(self):
         self.window.resize((640, 480))
         self.timer_thread.start()
         self.score_thread.start()
         self.gen_thread.start()
+        self.bomb_gen_thread.start()
         while not self.event_handler():
             self.window.draw_background()
             timer_text = pygame.font.Font(None, 50).render("timer: {}".format(self.timer.game_time), True, (255, 255, 255))
@@ -53,14 +47,16 @@ class Game:
             score_rect = timer_text.get_rect(center=(540, 50))
             self.window.screen.blit(score_text, score_rect)
 
-            # TODO move to thread
-
             self.vegetable_group.update(random.randint(1, 50) / 10, self.window.screen)
             self.vegetable_group.draw(self.window.screen)
-            
-            
             self.vegetable_group.add(self.gen.get_vegetables())
             self.gen.clear_vegetables()
+
+            self.bomb_group.update(random.randint(1, 50) / 10, self.window.screen)
+            self.bomb_group.draw(self.window.screen)
+            self.bomb_group.add(self.bomb_gen.get_bombs())
+            self.bomb_gen.clear_bombs()
+
             self.clock.tick(60)
 
     # TODO remove print statement
@@ -86,7 +82,10 @@ class Game:
                             self.vegetable_group.remove(veg)
                             veg.kill()
                             threading.Thread(target=self.timer.freeze_timer, daemon=True).start()
-                    # for bomb in self.bomb_group:
-                    #     threading.Thread(target=self.score.remove_point, daemon=True)
-                    #     pass
+                    for bomb in self.bomb_group:
+                        if bomb.rect.collidepoint(pygame.mouse.get_pos()):
+                            self.slash_sound.play(0)
+                            threading.Thread(target=self.score.remove_point, daemon=True).start()
+                            self.bomb_group.remove(bomb)
+                            bomb.kill()
         return False
