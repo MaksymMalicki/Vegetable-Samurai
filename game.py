@@ -36,6 +36,10 @@ class Game:
         self.veg_gen_thread = threading.Thread(target=self.veg_gen.run_generator, daemon=True)
         self.bomb_gen = UniversalGenerator(self.window, Bomb, (3,8), (1,3))
         self.bomb_gen_thread = threading.Thread(target=self.bomb_gen.run_generator, daemon=True)
+        self.slices = []
+        self.is_mouse_down = False
+        self.animation_duration = 0.1
+        
 
     def start(self):
         self.window.resize((640, 480))
@@ -66,7 +70,22 @@ class Game:
             self.bomb_group.add(self.bomb_gen.get_objects())
             self.bomb_gen.clear_objects()
 
-            self.clock.tick(60)
+            self.clock.tick(144)
+            # ! test
+            if self.is_mouse_down:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                self.slices.append({"pos": (mouse_x, mouse_y), "timer": 0})
+
+            for slice_data in self.slices:
+                slice_pos = slice_data["pos"]
+                slice_timer = slice_data["timer"]
+        
+                if slice_timer < self.animation_duration:
+                    pygame.draw.circle(self.window.screen, (random.randint(0,255), random.randint(0,255), random.randint(0,255)), slice_pos, 5)
+                    slice_data["timer"] += self.clock.get_time() / 1000 
+                else:
+                    self.slices.remove(slice_data)
+            pygame.display.flip()
 
             if self.timer.game_time == 0:
                 pygame.quit()
@@ -79,6 +98,10 @@ class Game:
                 return True
             elif event.type == pygame.VIDEORESIZE:
                 self.window.resize(event.size)
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                self.is_mouse_down = True
+            elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                self.is_mouse_down = False
             elif event.type == pygame.MOUSEMOTION:
                 if pygame.mouse.get_pressed()[0]:
                     for veg in self.vegetable_group:
