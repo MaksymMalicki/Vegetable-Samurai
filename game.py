@@ -4,9 +4,9 @@ import random
 from window import Window
 from score import Score
 from vegetable import Vegetable
-from generator import Generator
-from bomb_generator import BombGenerator
 from timer import Timer
+from universal_generator import UniversalGenerator
+from bomb import Bomb
 
 class Game:
 
@@ -27,13 +27,14 @@ class Game:
         self.explosion_sound.set_volume(0.3)
         self.vegetable_group = pygame.sprite.Group()
         self.bomb_group = pygame.sprite.Group()
-        self.timer = Timer(30)
+        self.timer = Timer(60)
         self.timer_thread = threading.Thread(target=self.timer.runTimer, daemon=True)
         self.score = Score()
         self.score_thread = threading.Thread(target=self.score.run_score, daemon=True)
-        self.veg_gen = Generator(self.window, 'normal')
+        # generators
+        self.veg_gen = UniversalGenerator(self.window, Vegetable)
         self.veg_gen_thread = threading.Thread(target=self.veg_gen.run_generator, daemon=True)
-        self.bomb_gen = BombGenerator(self.window, 'normal')
+        self.bomb_gen = UniversalGenerator(self.window, Bomb, (3,8), (1,3))
         self.bomb_gen_thread = threading.Thread(target=self.bomb_gen.run_generator, daemon=True)
 
     def start(self):
@@ -56,14 +57,14 @@ class Game:
             # Display vegetable
             self.vegetable_group.update(random.randint(1, 50) / 10, self.window.screen)
             self.vegetable_group.draw(self.window.screen)
-            self.vegetable_group.add(self.veg_gen.get_vegetables())
-            self.veg_gen.clear_vegetables()
+            self.vegetable_group.add(self.veg_gen.get_objects())
+            self.veg_gen.clear_objects()
 
             # Display Bomb
             self.bomb_group.update(random.randint(1, 50) / 10, self.window.screen)
             self.bomb_group.draw(self.window.screen)
-            self.bomb_group.add(self.bomb_gen.get_bombs())
-            self.bomb_gen.clear_bombs()
+            self.bomb_group.add(self.bomb_gen.get_objects())
+            self.bomb_gen.clear_objects()
 
             self.clock.tick(60)
 
