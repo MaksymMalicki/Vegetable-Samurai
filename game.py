@@ -17,7 +17,7 @@ class Game:
         self.vegetable = Vegetable(self.window.screen.get_size())
         pygame.mixer.init()
         pygame.mixer.music.load("sounds/Naruto - Fight.mp3")
-        pygame.mixer.music.play(-1)
+        pygame.mixer.music.play(loops=-1)
         pygame.mixer.music.set_volume(0.1)
         self.slash_sound = pygame.mixer.Sound("sounds/slash.wav")
         self.slash_sound.set_volume(0.2)
@@ -38,7 +38,9 @@ class Game:
         self.bomb_gen_thread = threading.Thread(target=self.bomb_gen.run_generator, daemon=True)
         self.slices = []
         self.is_mouse_down = False
-        self.animation_duration = 0.1
+        self.animation_duration = 0.2
+        self.button_press_time = 0
+        self.first_press = True
         
 
     def start(self):
@@ -77,12 +79,15 @@ class Game:
                 self.slices.append({"pos": (mouse_x, mouse_y), "timer": 0})
 
             for slice_data in self.slices:
-                slice_pos = slice_data["pos"]
+                slice_pos = (slice_data["pos"][0] + random.randint(2,5) if random.choice([0,1]) else slice_data["pos"][0] - random.randint(2,5), slice_data["pos"][1] + random.randint(2,5) if random.choice([0,1]) else slice_data["pos"][1] - random.randint(2,5))
                 slice_timer = slice_data["timer"]
         
                 if slice_timer < self.animation_duration:
-                    pygame.draw.circle(self.window.screen, (random.randint(0,255), random.randint(0,255), random.randint(0,255)), slice_pos, 5)
-                    slice_data["timer"] += self.clock.get_time() / 1000 
+                    # TODO choose colors and size of rects
+                    color = (0, random.randint(120,200), 0)
+                    rect = pygame.Rect(slice_pos, (random.randint(8,15), random.randint(8,15)))
+                    pygame.draw.rect(self.window.screen, color, rect)
+                    slice_data["timer"] += self.clock.get_time() / 1000
                 else:
                     self.slices.remove(slice_data)
             pygame.display.flip()
@@ -100,13 +105,20 @@ class Game:
                 self.window.resize(event.size)
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 self.is_mouse_down = True
+                if self.first_press:
+                    self.slash_sound.play(0)
+                    self.first_press = False
+                    self.button_press_time = pygame.time.get_ticks()
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                self.button_press_time = 0
+                self.first_press = True
                 self.is_mouse_down = False
             elif event.type == pygame.MOUSEMOTION:
-                if pygame.mouse.get_pressed()[0]:
+                # TODO choose the right time
+                if self.is_mouse_down and (pygame.time.get_ticks() - self.button_press_time) < 400:
                     for veg in self.vegetable_group:
                         if veg.rect.collidepoint(pygame.mouse.get_pos()):
-                            self.slash_sound.play(0)
+                            # self.slash_sound.play(0)
                             threading.Thread(target=self.score.add_point, daemon=True).start()
                             self.vegetable_group.remove(veg)
                             veg.kill()
@@ -120,6 +132,11 @@ class Game:
                             threading.Thread(target=self.score.divide_points, daemon=True).start()
                             self.bomb_group.remove(bomb)
                             bomb.kill()
+                elif self.is_mouse_down:
+                    self.is_mouse_down = False
+                    self.button_press_time = 0
+                    self.first_press =  True
+                    print('mouse button is pressed for too long')
         return False
     
     def start_threads(self):
