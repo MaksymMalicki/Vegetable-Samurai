@@ -61,13 +61,13 @@ class Game:
             self.window.screen.blit(score_text, score_rect)
 
             # Display vegetable
-            self.vegetable_group.update(random.randint(1, 50) / 10, self.window.screen)
+            self.vegetable_group.update(random.uniform(1,2), self.window.screen)
             self.vegetable_group.draw(self.window.screen)
             self.vegetable_group.add(self.veg_gen.get_objects())
             self.veg_gen.clear_objects()
 
             # Display Bomb
-            self.bomb_group.update(random.randint(1, 50) / 10, self.window.screen)
+            self.bomb_group.update(random.uniform(1.3,2.6), self.window.screen)
             self.bomb_group.draw(self.window.screen)
             self.bomb_group.add(self.bomb_gen.get_objects())
             self.bomb_gen.clear_objects()
