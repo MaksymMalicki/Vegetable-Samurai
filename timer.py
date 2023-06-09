@@ -8,7 +8,7 @@ class Timer:
         self.game_time = game_time
         self.freeze_time = 10
 
-    def runTimer(self):
+    def run_timer(self):
         while True:
             with self.lock:
                 self.game_time -= 1
@@ -19,4 +19,4 @@ class Timer:
             time.sleep(self.freeze_time)
 
     def start_freeze_thread(self):
-        freeze_thread = threading.Thread(target=self.freeze_timer, daemon=True).start()
+        threading.Thread(target=self.freeze_timer, daemon=True).start()
