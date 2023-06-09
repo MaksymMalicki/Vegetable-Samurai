@@ -47,7 +47,8 @@ class Window:
         :return: none
         """
         scale_factor = min(new_size[0] / self.width, new_size[1] / self.height)
-        self.screen = pygame.display.set_mode((int(self.width * scale_factor), int(self.height * scale_factor)))
+        self.screen = pygame.display.set_mode((int(self.width * scale_factor), \
+                                            int(self.height * scale_factor)))
         self.background_image = pygame.transform.scale(self.background_image, (
             int(self.width * scale_factor), int(self.height * scale_factor)))
         self.draw_background()

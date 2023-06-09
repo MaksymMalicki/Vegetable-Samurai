@@ -10,7 +10,7 @@ class Bomb(GameObject):
     """
     Class Bomb:
     attributes:
-        brak
+        none
     methods:
         contructor: inherits from GameObject and adds two atributes - window_size and texture
     """
