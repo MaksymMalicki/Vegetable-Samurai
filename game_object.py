@@ -31,26 +31,34 @@ class GameObject(pygame.sprite.Sprite):
     def get_position(self):
         """
         This method is responsible for getting the initial position of the parabolic movement
-        :return:
+        
+        Parameters:
+            none
+        Returns:
+            tuple: contains starting x and starting y position and launch direction of an object
         """
-        if random.choice([1, -1]) == 1:
-            return random.randint(self.win_size[1] / 10, self.win_size[0] * 3 / 5), self.win_size[1]
-        return random.randint(self.win_size[1] * 2 / 5, self.win_size[0] * 9 / 10), self.win_size[1]
+        launch_direction = random.choice([1, -1])
+        if launch_direction == 1:
+            return random.randint(self.win_size[1] / 10, self.win_size[0] * 3 / 5), \
+                self.win_size[1], launch_direction
+        return random.randint(self.win_size[1] * 2 / 5, self.win_size[0] * 9 / 10), \
+            self.win_size[1], launch_direction
 
     def update(self, movement_shift=0.001, window=None):
         """
         This method updates the coordinates of the center of the object
-        :param movement_shift:
-        :param window:
-        :return:
+
+        Parameters:
+            movement_shift : float : indicates how far the object can move in each clock tick
+            window: Window : object of a Window class on which we display our objects
         """
         if not self.rect.colliderect(window.get_rect()):
             self.kill()
-        pos_x, pos_y = self.position
-        pos_x += movement_shift * self.orientation
+        pos_x, pos_y, choice = self.position
+        pos_x += movement_shift * choice
         self.x_relative_y += movement_shift
         pos_y = self.win_size[1] - (self.x_relative_y * math.tan(self.theta)
                                     - ((GRAVITY * self.x_relative_y ** 2)
                                     / (2 * self.ini_vel ** 2 * math.cos(self.theta) ** 2)))
         self.rect.center = [pos_x, pos_y]
-        self.position = pos_x, pos_y
+        self.position = pos_x, pos_y, choice
